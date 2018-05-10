@@ -32,7 +32,7 @@ var client = new pokebot.PokeBot('localhost:50051', grpc.credentials.createInsec
 
 function runSearchPokemons(callback) {
   console.log('calling server');
-  var call = client.searchPokemon( { "name" : "bulbasaur" } );  //bulbasaur | poison
+  var call = client.searchPokemon( { "name" : "poison" } );  //bulbasaur | poison
   call.on('data', function(pokemon) {
       console.log(pokemon);
   });
