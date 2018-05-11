@@ -41,14 +41,18 @@ async function searchPokemon(call) {
     call.write(await getPokemon(name));
   }
   catch (error) {
-    console.log(error);
-    try {
-      let pokemons = await getTypes(name);
-      await Promise.all(pokemons.map(async p => {
-        call.write(await getPokemon(p.pokemon.name));
-      }))
+    if (error.statusCode == 404) {
+      try {
+        let pokemons = await getTypes(name);
+        await Promise.all(pokemons.map(async p => {
+          call.write(await getPokemon(p.pokemon.name));
+        }))
+      }
+      catch (error) {
+        console.log(error);
+      }
     }
-    catch (error) {
+    else {
       console.log(error);
     }
   }

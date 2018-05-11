@@ -42,7 +42,7 @@ The generated Swift protobuf and grpc files are included in this repo so in orde
 
 - run `pod install` to install Swift GRPC dependencies
 - open the solution in Xcode
-- update the REST or GRPC endpoint in the ViewController.swift file according to where you are running the BFF
+- update the GRPC endpoint in the Info.plist (GRPC_Address field) file according to where you are running the GRPC BFF
 - build and run on simulator or device 
 
 
@@ -52,3 +52,4 @@ In order to run the BFF GRPC service on your workstation and being able to run t
 
 - install ngrok from https://ngrok.com
 - run `ngrok tcp 50051`
+- updtate the client GRPC endpoint in the Info.plist (GRPC_Address field)

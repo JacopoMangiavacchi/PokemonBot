@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  PokemonViewController.swift
 //  PokeBot
 //
 //  Created by Jacopo Mangiavacchi on 5/1/18.
@@ -9,10 +9,9 @@
 import UIKit
 import AudioToolbox
 import Kingfisher
-import SwiftGRPC
 
 
-class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UITextFieldDelegate {
+class PokemonViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var searchView: UIView!
     @IBOutlet weak var searchTextField: UITextField!
@@ -23,18 +22,11 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     @IBOutlet weak var headerLabel: UILabel!
     
-    var pokemons = [Pokebot_Pokemon]()
-    
-    var client: Pokebot_PokeBotServiceClient!
-    var event: Pokebot_PokeBotsearchPokemonCall!
-    var searching = false
+    var datasource = PokemonDataSource()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        gRPC.initialize()
-        print("GRPC version \(gRPC.version)")
-
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         layout.minimumInteritemSpacing = 0.0
@@ -69,11 +61,18 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        pokemons = [Pokebot_Pokemon]()
+        datasource.reset()
         collectionView.reloadData()
 
         if let text = searchTextField.text {
-            searchNewPokemon(searchText: text)
+            headerLabel.text = "Searching..."
+            loadingActivityIndicator.startAnimating()
+
+            datasource.searchNewPokemon(searchText: text) {
+                self.loadingActivityIndicator.stopAnimating()
+                self.headerLabel.text = "Found \(self.datasource.pokemons.count) Pokemons"
+                self.collectionView.reloadData()
+            }
         }
         
         searchTextField.resignFirstResponder()
@@ -84,58 +83,14 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
 
         return true
     }
-    
-    func searchNewPokemon(searchText: String) {
-        headerLabel.text = "Searching..."
-        loadingActivityIndicator.startAnimating()
+}
 
-        do {
-            searching = true
-            var input = Pokebot_PokeInput()
-            input.name = searchText
-            
-            self.client = Pokebot_PokeBotServiceClient(address: "0.tcp.ngrok.io:17161", secure: false)
-            self.event = try self.client.searchPokemon(input, completion: { (result) in
-                self.searching = false
-                print(result)
-            })
-            
-            DispatchQueue.global().async {
-                do {
-                    while (self.searching) {
-                        if let newPokemon = try self.event.receive() {
-                            DispatchQueue.main.async {
-                                self.loadingActivityIndicator.stopAnimating()
-                                self.pokemons.append(newPokemon)
-                                self.headerLabel.text = "Found \(self.pokemons.count) Pokemons"
-                                self.collectionView.reloadData()
-                            }
-                        }
-                    }
-                }
-                catch {
-                    print(error)
-                }
-            }
-        } catch {
-            print(error)
-        }
-    }
-    
-    // MARK: UICollectionViewDataSource
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pokemons.count
-    }
-    
+
+extension PokemonViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PokemonCell", for: indexPath) as! PokemonCell
         
-        let pokemon = pokemons[indexPath.row]
+        let pokemon = datasource.pokemons[indexPath.row]
         
         let url = URL(string: pokemon.image)
         cell.imageView.kf.setImage(with: url)
@@ -148,6 +103,17 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         
         return cell
     }
-
 }
+
+
+extension PokemonViewController: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return datasource.pokemons.count
+    }
+}
+
 
