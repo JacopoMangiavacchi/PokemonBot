@@ -2,6 +2,8 @@
 
 An iOS Swift Client using a BFF (Backend for Frontend) service implemented in Node.js to simplify access to Pokemon APIs exposed on https://pokeapi.co
 
+https://medium.com/@JMangia/grpc-bff-for-swift-ios-app-d5f6718a545
+
 
 ## BFF
 
