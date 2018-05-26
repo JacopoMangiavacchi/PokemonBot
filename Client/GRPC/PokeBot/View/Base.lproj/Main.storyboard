@@ -75,7 +75,7 @@
                                                     <constraint firstItem="Pet-zh-sPT" firstAttribute="leading" secondItem="qFf-J1-egR" secondAttribute="leading" id="ujJ-40-fjw"/>
                                                 </constraints>
                                             </view>
-                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="UMt-xU-qPv">
+                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="UMt-xU-qPv">
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="367"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="onq-DI-sHy">
@@ -302,6 +302,7 @@
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="UMt-xU-qPv" id="Euu-Ip-oFA"/>
+                        <outlet property="contentView" destination="PJo-dV-vhw" id="qmn-xm-hAa"/>
                         <outlet property="headerLabel" destination="NBY-g6-e6o" id="XwE-9I-N9b"/>
                         <outlet property="loadingActivityIndicator" destination="V2m-ss-H1B" id="cuG-q4-o6C"/>
                         <outlet property="searchTextField" destination="Pet-zh-sPT" id="ZMT-jI-aNJ"/>

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>GRPC_Address</key>
-	<string>0.tcp.ngrok.io:15519</string>
+	<string>0.tcp.ngrok.io:17077</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
